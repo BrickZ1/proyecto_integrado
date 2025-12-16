@@ -1,31 +1,37 @@
 {
-  "name": "proyecto_integrado",
+  "name": "museo-parque-angostura",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "firebase": "^10.14.1",
-    "framer-motion": "^12.23.26",
-    "lucide-react": "^0.309.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.2",
-    "react-scripts": "^5.0.1"
-  },
-  "devDependencies": {
-    "autoprefixer": "10.4.16",
-    "postcss": "8.4.33",
-    "tailwindcss": "^3.4.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "firebase": "^10.7.0",
+    "firebase-admin": "^11.11.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
+    "react-hot-toast": "^2.4.1",
+    "lucide-react": "^0.309.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "firebase:init": "node scripts/initFirebase.js",
+    "firebase:login": "firebase login",
+    "firebase:deploy": "firebase deploy",
+    "firebase:deploy:hosting": "firebase deploy --only hosting",
+    "firebase:deploy:firestore": "firebase deploy --only firestore",
+    "firebase:deploy:rules": "firebase deploy --only firestore:rules",
+    "firebase:emulators": "firebase emulators:start",
+    "dev": "concurrently \"npm start\" \"npm run firebase:emulators\""
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
+  "devDependencies": {
+    "react-scripts": "5.0.1",
+    "concurrently": "^8.2.2"
   },
   "browserslist": {
     "production": [

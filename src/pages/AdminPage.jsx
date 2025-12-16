@@ -1,26 +1,25 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import AdminLogin from '../components/admin/AdminLogin';
-import AdminLayout from '../components/admin/AdminLayout';
-import QuestionManager from '../components/admin/QuestionManager';
-import QuizStats from '../components/admin/QuizStats';
-import Leaderboard from '../components/admin/Leaderboard';
-import ProtectedRoute from '../components/admin/ProtectedRoute';
+import { Routes, Route, Navigate } from "react-router-dom";
+import AdminLogin from "../components/admin/AdminLogin";
+import AdminDashboard from "../components/admin/AdminDashboard";
+import ProtectedRoute from "../components/admin/ProtectedRoute";
 
-export default function AdminPage() {
+const AdminPage = () => {
   return (
-    <Routes>
-      <Route path="/login" element={<AdminLogin />} />
-      
-      <Route path="/" element={
-        <ProtectedRoute>
-          <AdminLayout />
-        </ProtectedRoute>
-      }>
-        <Route index element={<Navigate to="preguntas" replace />} />
-        <Route path="preguntas" element={<QuestionManager />} />
-        <Route path="estadisticas" element={<QuizStats />} />
-        <Route path="leaderboard" element={<Leaderboard />} />
-      </Route>
-    </Routes>
+    <div className="min-h-screen bg-gray-50">
+      <Routes>
+        <Route path="login" element={<AdminLogin />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/admin" replace />} />
+      </Routes>
+    </div>
   );
-}
+};
+
+export default AdminPage;

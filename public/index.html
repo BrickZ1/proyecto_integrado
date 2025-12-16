@@ -4,32 +4,161 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1E40AF" />
-    <meta name="description" content="Parque Angostura del Biobío - Energía renovable y turismo sustentable" />
-    
+    <meta name="theme-color" content="#0ea5e9" />
+    <meta
+      name="description"
+      content="Sitio web informativo y quiz interactivo del Museo Parque Angostura en la Región del Biobío, Chile"
+    />
+    <meta
+      name="keywords"
+      content="Museo Parque Angostura, Biobío, Chile, turismo, naturaleza, quiz, cultura"
+    />
+    <meta name="author" content="Museo Parque Angostura" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://parqueangostura.cl/" />
-    <meta property="og:title" content="Parque Angostura del Biobío" />
-    <meta property="og:description" content="Energía renovable y turismo sustentable en el corazón del Biobío, Chile" />
-    <meta property="og:image" content="%PUBLIC_URL%/images/hero-parque.jpg" />
-    
+    <meta property="og:url" content="https://angosturadelbiobio.cl/" />
+    <meta
+      property="og:title"
+      content="Museo Parque Angostura - Descubre la naturaleza del Biobío"
+    />
+    <meta
+      property="og:description"
+      content="Sitio web informativo y quiz interactivo sobre el Museo Parque Angostura"
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.jpg" />
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://parqueangostura.cl/" />
-    <meta property="twitter:title" content="Parque Angostura del Biobío" />
-    <meta property="twitter:description" content="Energía renovable y turismo sustentable en el corazón del Biobío, Chile" />
-    <meta property="twitter:image" content="%PUBLIC_URL%/images/hero-parque.jpg" />
-    
-    <!-- Preconnect para fuentes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <title>Parque Angostura del Biobío - Energía renovable y turismo sustentable</title>
+    <meta property="twitter:url" content="https://angosturadelbiobio.cl/" />
+    <meta
+      property="twitter:title"
+      content="Museo Parque Angostura - Descubre la naturaleza del Biobío"
+    />
+    <meta
+      property="twitter:description"
+      content="Sitio web informativo y quiz interactivo sobre el Museo Parque Angostura"
+    />
+    <meta property="twitter:image" content="%PUBLIC_URL%/og-image.jpg" />
+
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <title>Museo Parque Angostura - Región del Biobío, Chile</title>
+
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Estilos base -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #f9fafb;
+        color: #1f2937;
+      }
+
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Loading inicial */
+      .app-loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-text {
+        margin-top: 20px;
+        color: white;
+        font-size: 18px;
+        font-weight: 500;
+      }
+    </style>
   </head>
   <body>
-    <noscript>Necesitas activar JavaScript para ejecutar esta aplicación.</noscript>
-    <div id="root"></div>
+    <noscript>
+      <div
+        style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+          color: white;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+          text-align: center;
+          z-index: 9999;
+        "
+      >
+        <div>
+          <h1 style="font-size: 24px; margin-bottom: 16px">
+            JavaScript Requerido
+          </h1>
+          <p style="font-size: 16px; margin-bottom: 24px; max-width: 400px">
+            Para utilizar el sitio web del Museo Parque Angostura, necesitas
+            habilitar JavaScript en tu navegador.
+          </p>
+          <p style="font-size: 14px; opacity: 0.9">
+            Por favor, activa JavaScript y recarga la página.
+          </p>
+        </div>
+      </div>
+    </noscript>
+
+    <div id="root">
+      <!-- Loading inicial -->
+      <div class="app-loading">
+        <div style="text-align: center">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">Cargando Museo Parque Angostura...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts de Firebase (opcional, se cargan desde React) -->
+    <script>
+      // Scripts iniciales si son necesarios
+      window.addEventListener("load", function () {
+        console.log("Museo Parque Angostura - Sitio web cargado");
+      });
+    </script>
   </body>
 </html>

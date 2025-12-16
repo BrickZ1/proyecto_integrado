@@ -1,0 +1,48 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Reglas públicas (acceso sin autenticación)
+    match /quiz_questions/{questionId} {
+      allow read: if request.auth != null || request.time < timestamp.date(2025, 12, 31);
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admin_users/$(request.auth.uid)).data.role in ['admin', 'editor'];
+    }
+    
+    match /quiz_results/{resultId} {
+      allow create: if true; // Cualquiera puede enviar resultados
+      allow read, update, delete: if request.auth != null && 
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid));
+    }
+    
+    // Reglas para usuarios administradores
+    match /admin_users/{userId} {
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid));
+      
+      allow create: if request.auth != null && 
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admin_users/$(request.auth.uid)).data.role == 'admin';
+      
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == userId || 
+         (exists(/databases/$(database)/documents/admin_users/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/admin_users/$(request.auth.uid)).data.role == 'admin'));
+    }
+    
+    // Actividades de administración
+    match /admin_activities/{activityId} {
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid));
+      
+      allow create: if request.auth != null && 
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.uid));
+    }
+    
+    // Reglas generales
+    match /{document=**} {
+      allow read, write: if false; // Por defecto, denegar todo
+    }
+  }
+}

@@ -1,31 +1,36 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './styles/App.css'
-
-// Layout
-import Header from './components/layout/Header';
-import Footer from './components/layout/Footer';
-
-// Pages
-import HomePage from './pages/HomePage';
-import QuizPage from './pages/QuizPage';
-import AdminPage from './pages/AdminPage';
+import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+import { AuthProvider } from "./context/AuthContext";
+import { QuizProvider } from "./context/QuizContext";
+import HomePage from "./pages/HomePage";
+import QuizPage from "./pages/QuizPage";
+import AdminPage from "./pages/AdminPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import ProtectedRoute from "./components/admin/ProtectedRoute";
+import Layout from "./components/Layout/Layout";
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex-grow">
+    <AuthProvider>
+      <QuizProvider>
+        <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/quiz" element={<QuizPage />} />
-            <Route path="/admin/*" element={<AdminPage />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+          <Toaster position="top-right" />
+        </Layout>
+      </QuizProvider>
+    </AuthProvider>
   );
 }
 

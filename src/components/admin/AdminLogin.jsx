@@ -1,163 +1,106 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Lock, User, AlertCircle, CheckCircle } from 'lucide-react';
-import { loginAdmin, checkAuthState } from '../../services/firebaseService';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { LogIn } from "lucide-react";
+import toast from "react-hot-toast";
 
-export default function AdminLogin() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const AdminLogin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const unsubscribe = checkAuthState((user) => {
-      setIsCheckingAuth(false);
-      if (user) {
-        navigate('/admin');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [navigate]);
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
-    if (!email || !password) {
-      setError('Por favor completa todos los campos');
+    try {
+      const result = await login(email, password);
+      if (result.success) {
+        toast.success("Inicio de sesión exitoso");
+        navigate("/admin");
+      } else {
+        toast.error(result.error);
+      }
+    } catch (error) {
+      toast.error("Error al iniciar sesión");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const result = await loginAdmin(email, password);
-
-    if (result.success) {
-      navigate('/admin');
-    } else {
-      setError(result.error);
-    }
-
-    setLoading(false);
   };
-
-  const handleDemoLogin = () => {
-    setEmail('admin@parqueangostura.cl');
-    setPassword('admin123');
-  };
-
-  if (isCheckingAuth) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-biobio-blue to-biobio-green flex items-center justify-center">
-        <div className="text-white text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Verificando autenticación...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-biobio-blue to-biobio-green flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-biobio-blue to-biobio-green rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="text-white" size={24} />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-primary-100">
+            <LogIn className="h-6 w-6 text-primary-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Panel de Administración</h2>
-          <p className="text-gray-600 mt-2">Parque Angostura del Biobío</p>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Panel de Administración
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Ingresa tus credenciales para acceder
+          </p>
         </div>
 
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-            <AlertCircle className="text-red-500 flex-shrink-0 mt-0.5" size={20} />
-            <div className="text-red-700 text-sm">{error}</div>
-          </div>
-        )}
-
-        <form onSubmit={handleLogin}>
-          <div className="mb-6">
-            <label className="block text-gray-700 mb-2 font-medium">Correo Electrónico</label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="rounded-md shadow-sm space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
               <input
+                id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-biobio-blue focus:border-transparent transition-all"
-                placeholder="admin@parqueangostura.cl"
-                required
+                className="input-field mt-1"
+                placeholder="admin@ejemplo.com"
               />
             </div>
-          </div>
 
-          <div className="mb-8">
-            <label className="block text-gray-700 mb-2 font-medium">Contraseña</label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Contraseña
+              </label>
               <input
+                id="password"
+                name="password"
                 type="password"
+                autoComplete="current-password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-biobio-blue focus:border-transparent transition-all"
+                className="input-field mt-1"
                 placeholder="••••••••"
-                required
               />
             </div>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-lg font-bold transition-all ${
-              loading
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-biobio-blue to-biobio-green text-white hover:opacity-90'
-            }`}
-          >
-            {loading ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-                <span>Iniciando sesión...</span>
-              </div>
-            ) : (
-              'Iniciar Sesión'
-            )}
-          </button>
-        </form>
-
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <button
-            onClick={handleDemoLogin}
-            className="w-full border-2 border-biobio-blue text-biobio-blue py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors"
-          >
-            Usar credenciales de demo
-          </button>
-          
-          <div className="mt-4 text-center text-sm text-gray-600">
-            <p className="mb-2">Credenciales para prueba:</p>
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <p className="font-mono">admin@parqueangostura.cl</p>
-              <p className="font-mono">admin123</p>
-            </div>
-            <p className="mt-3 text-xs">
-              Nota: Primero debes crear este usuario en Firebase Authentication
-            </p>
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+            >
+              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+            </button>
           </div>
-        </div>
-
-        <div className="mt-8 text-center">
-          <a 
-            href="/" 
-            className="text-biobio-blue hover:underline font-medium"
-          >
-            ← Volver al sitio principal
-          </a>
-        </div>
+        </form>
       </div>
     </div>
   );
-}
+};
+
+export default AdminLogin;

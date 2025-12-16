@@ -1,32 +1,19 @@
-import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { checkAuthState } from '../../services/firebaseService';
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import LoadingSpinner from "../shared/LoadingSpinner";
 
-export default function ProtectedRoute({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+const ProtectedRoute = ({ children }) => {
+  const { user, loading, isAdmin } = useAuth();
 
-  useEffect(() => {
-    const unsubscribe = checkAuthState((user) => {
-      setIsAuthenticated(!!user);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  if (isAuthenticated === null) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-biobio-blue mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando autenticación...</p>
-        </div>
-      </div>
-    );
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
-  if (!isAuthenticated) {
+  if (!user || !isAdmin) {
     return <Navigate to="/admin/login" replace />;
   }
 
   return children;
-}
+};
+
+export default ProtectedRoute;
